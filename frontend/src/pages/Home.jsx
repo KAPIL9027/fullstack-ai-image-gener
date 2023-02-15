@@ -7,11 +7,16 @@ const RenderCards = ({data,title})=>
   {
     return data.map((post)=> <Card key={post._id} {...post}/>)
   }
+   return (
+    < h2 className = "mt-5 font-bold text-[#6449ff] text-xl uppercase">
+      {title}
+    </h2>
+   )
 }
 function Home() {
    const [loading,setLoading] = useState(false);
    const [allPosts,setAllPosts] = useState(null);
-   const [searchText,setSearchText] = useState('abc')
+   const [searchText,setSearchText] = useState('')
   return (
     <section className='max-w-7xl mx-auto'>
       <div>
@@ -51,7 +56,16 @@ function Home() {
               }
               <div className="grid lg:grid-cols-4 sm:grid-cols-3
                xs:grid-cols-2 grid-cols-1 gaps-3">
+                {
+                  searchText ?
+                  <RenderCards data={[]}
+                   title="No result found"
+                   /> 
+                   :
+                   <RenderCards data={[]}
+                    title="No posts found"/>
 
+                }
                  </div>
             </>
         }
