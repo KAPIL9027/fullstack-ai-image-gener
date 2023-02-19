@@ -5,7 +5,7 @@ const RenderCards = ({data,title})=>
 {
   if(data.length > 0 )
   {
-    return data.map((post)=> <Card key={post._id} {...post}/>)
+    return data.map((post)=> <Card key={post._id} _id={post._id} name={post.name} prompt={post.prompt} photo={post.photo}/>)
   }
    return (
     < h2 className = "mt-5 font-bold text-[#6449ff] text-xl uppercase">
@@ -15,12 +15,11 @@ const RenderCards = ({data,title})=>
 }
 function Home() {
    const [loading,setLoading] = useState(false);
-   const [allPosts,setAllPosts] = useState(null);
+   const [allPosts,setAllPosts] = useState([]);
    const [searchText,setSearchText] = useState('');
-
-   useEffect(()=>
-   {
-    const fetchPosts = async ()=>
+   const [searchTimeOut,setSearchTimeOut] = useState(null);
+   const [searchedResults,setSearchedResults] = useState([]);
+   const fetchPosts = async ()=>
     {
       setLoading(true);
 
@@ -49,8 +48,26 @@ function Home() {
         setLoading(false)
       }
     }
+
+   useEffect(()=>
+   {
     fetchPosts();
    },[])
+
+   const handleSearchChange = (e)=> {
+    clearTimeout(searchTimeOut);
+    setSearchText(e.target.value);
+    setSearchTimeOut( setTimeout(()=>
+    {
+      const searchResults = allPosts.filter((item)=> item.name.
+      toLowerCase().includes(searchText.toLowerCase()) || item.prompt.toLowerCase()
+      .includes(searchText.toLowerCase()))
+
+      setSearchedResults(searchResults);
+    },500))
+   
+   }
+
   return (
     <section className='max-w-7xl mx-auto'>
       <div>
@@ -64,7 +81,13 @@ function Home() {
       </div>
 
       <div className="mt-16">
-        <FormField/>
+        <FormField
+        LabelName="Search Posts"
+        type="text"
+        name="text"
+        placeholder="Search posts"
+        value={searchText}
+        handleChange={handleSearchChange}/>
       </div>
 
       <div className="mt-10">
@@ -92,7 +115,7 @@ function Home() {
                xs:grid-cols-2 grid-cols-1 gaps-3">
                 {
                   searchText ?
-                  <RenderCards data={[]}
+                  <RenderCards data={searchedResults}
                    title="No result found"
                    /> 
                    :
