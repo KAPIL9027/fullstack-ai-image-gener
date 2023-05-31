@@ -20,7 +20,7 @@ app.get('/',async (req,res)=>
 });
 
 
-const startServer = async () =>
+const startServer =  () =>
 {
     try
     {
